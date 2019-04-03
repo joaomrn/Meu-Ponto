@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using MeuPonto.Model;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace MeuPonto.Controllers
 {
@@ -9,17 +10,31 @@ namespace MeuPonto.Controllers
     public class ValuesController : ControllerBase
     {
         // GET api/values
+        [HttpGet]
+        public ActionResult<string> Get()
+        {
+            return "API REST Iniciada!";
+        }
+        
+        // Retorna todos os funcionarios de determinada empresa
         [HttpGet("GetFuncionario/{empresaId}")]
-        public ActionResult<List<Funcionario>> GetFuncionario(int empresaId)
+        public ActionResult<string> GetFuncionario(int empresaId)
         {
             return GetFuncionarioPorEmpresa(empresaId);
         }
 
-        // GET api/values/5
+        // Retorna os dados da empresa
         [HttpGet("GetEmpresa/{id}")]
-        public ActionResult<Empresa> GetEmpresa(int id)
+        public ActionResult<string> GetEmpresa(int id)
         {
             return ObterDadosEmpresa(id);
+        }
+        
+        // Retorna os registros de ponto do funcionario
+        [HttpGet("GetPonto/{funcionarioId}")]
+        public ActionResult<string> GetPonto(int funcionarioId)
+        {
+            return ObterDadosPonto(funcionarioId);
         }
 
         // POST api/values
@@ -41,21 +56,33 @@ namespace MeuPonto.Controllers
         }
 
         //Retorna a lista de funcionarios de determinada empresa
-        public List<Funcionario> GetFuncionarioPorEmpresa(int empresaId)
+        public string GetFuncionarioPorEmpresa(int empresaId)
         {
             Funcionario funcionario = new Funcionario();
             List<Funcionario> funcionarioList = new List<Funcionario>();
 
             funcionario.ListarFuncionariosPorEmpresa(empresaId, out funcionarioList);
-            return funcionarioList;
+
+            return JsonConvert.SerializeObject(funcionarioList);
         }
 
         //Retorna as informações da empresa
-        public Empresa ObterDadosEmpresa(int Id)
+        public string ObterDadosEmpresa(int Id)
         {
             Empresa empresa = new Empresa();
 
-            return empresa.DadosEmpresa(Id);
+            return JsonConvert.SerializeObject(empresa.DadosEmpresa(Id));
+        }
+        
+        //Retorna as informações da empresa
+        public string ObterDadosPonto(int funcionarioId)
+        {
+            Ponto ponto = new Ponto();
+            List<Ponto> pontoList;
+
+            ponto.RegistroFuncionario(funcionarioId, out pontoList);
+
+            return JsonConvert.SerializeObject(pontoList);
         }
     }
 }

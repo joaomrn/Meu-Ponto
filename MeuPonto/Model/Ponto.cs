@@ -17,12 +17,14 @@ namespace MeuPonto.Model
         public DateTime IdaAlmoco { get; set; }
         public DateTime VoltaAlmoco { get; set; }
         public int FuncionarioId { get; set; }
-        public string DiaSemana { get; set; }
+        public DateTime DiaSemana { get; set; }
+        public string DiaSemanaString { get; set; }
 
         //Retorna os dados de ponto do funcionario
-        public Ponto DadosFuncionario(int funcionarioId)
+        public List<Ponto> RegistroFuncionario(int funcionarioId, out List<Ponto> pontoList)
         {
-            Ponto ponto = new Ponto();
+            Ponto ponto = null;
+            pontoList = new List<Ponto>();
             DAL dados = new DAL();
 
             //Monta a string de pesquisa
@@ -37,16 +39,23 @@ namespace MeuPonto.Model
                     //percorre a lista de funcionarios retornados e adiciona na lista
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
+                        ponto = new Ponto();
                         ponto.Id = Convert.ToInt32(dt.Rows[i]["Id"].ToString());
+                        ponto.FuncionarioId = Convert.ToInt32(dt.Rows[i]["FuncionarioId"].ToString());
                         ponto.Entrada = Convert.ToDateTime(dt.Rows[i]["Entrada"].ToString());
                         ponto.Saida = Convert.ToDateTime(dt.Rows[i]["Saida"].ToString());
                         ponto.IdaAlmoco = Convert.ToDateTime(dt.Rows[i]["IdaAlmoco"].ToString());
                         ponto.VoltaAlmoco = Convert.ToDateTime(dt.Rows[i]["VoltaAlmoco"].ToString());
+                        ponto.DiaSemana = Convert.ToDateTime(dt.Rows[i]["DiaSemana"].ToString());
+                        ponto.DiaSemanaString = dt.Rows[i]["DiaSemanaString"].ToString();
+
+                        //Adiciona o objeto na lista
+                        pontoList.Add(ponto);
                     }
                 }
             }
 
-            return ponto;
+            return pontoList;
         }
     }
 }
