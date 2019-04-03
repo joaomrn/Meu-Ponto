@@ -7,9 +7,9 @@ namespace MeuPonto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class MeuPontoController : ControllerBase
     {
-        // GET api/values
+        // GET api/MeuPonto
         [HttpGet]
         public ActionResult<string> Get()
         {
@@ -37,19 +37,19 @@ namespace MeuPonto.Controllers
             return ObterDadosPonto(funcionarioId);
         }
 
-        // POST api/values
+        // POST api/MeuPonto
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/values/5
+        // PUT api/MeuPonto/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE api/MeuPonto/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
