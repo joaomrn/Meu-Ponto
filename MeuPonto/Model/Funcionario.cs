@@ -15,22 +15,42 @@ namespace MeuPonto.Model
         public string Matricula { get; set; }
         public int PontoId { get; set; }
 
-
-        public void ListarFuncionarios()
+        /// <summary>
+        /// Lista todos os funcionarios da empresa cadastrados no banco
+        /// </summary>
+        /// <param name="funcionarioList"></param>
+        /// <returns></returns>
+        public List<Funcionario> ListarFuncionariosPorEmpresa(int empresaId, out List<Funcionario> funcionarioList)
         {
+            funcionarioList = new List<Funcionario>();
+            Funcionario funcionario;
             DAL dados = new DAL();
-            DataTable dt = dados.RetDataTable("SELECT * FROM FUNCIONARIO");
+
+            //Monta a string de pesquisa
+            string sql = string.Format("SELECT * FROM FUNCIONARIO WHERE EmpresaId = {0}", empresaId);
+
+            DataTable dt = dados.RetDataTable(sql);
             if (dt != null)
             {
+                //Verifica se o resultado não é vazio
                 if (dt.Rows.Count > 0)
                 {
-                    Id = Convert.ToInt32(dt.Rows[0]["Id"].ToString());
-                    Nome = dt.Rows[0]["Nome"].ToString();
-                    EmpresaId = Convert.ToInt32(dt.Rows[0]["EmpresaId"].ToString());
-                    Matricula = dt.Rows[0]["Matricula"].ToString();
-                    PontoId = Convert.ToInt32(dt.Rows[0]["PontoId"].ToString());
+                    //percorre a lista de funcionarios retornados e adiciona na lista
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        funcionario = new Funcionario();
+                        funcionario.Id = Convert.ToInt32(dt.Rows[i]["Id"].ToString());
+                        funcionario.Nome = dt.Rows[i]["Nome"].ToString();
+                        funcionario.EmpresaId = Convert.ToInt32(dt.Rows[i]["EmpresaId"].ToString());
+                        funcionario.Matricula = dt.Rows[i]["Matricula"].ToString();
+                        funcionario.PontoId = Convert.ToInt32(dt.Rows[i]["PontoId"].ToString());
+
+                        funcionarioList.Add(funcionario);
+                    }
                 }
             }
+
+            return funcionarioList;
         }
 
     }

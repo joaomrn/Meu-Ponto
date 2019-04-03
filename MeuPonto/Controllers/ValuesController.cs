@@ -9,20 +9,17 @@ namespace MeuPonto.Controllers
     public class ValuesController : ControllerBase
     {
         // GET api/values
-        [HttpGet("GetFuncionario")]
-        public ActionResult<Funcionario> GetFuncionario()
+        [HttpGet("GetFuncionario/{empresaId}")]
+        public ActionResult<List<Funcionario>> GetFuncionario(int empresaId)
         {
-            Funcionario funcionario = new Funcionario();
-            funcionario.ListarFuncionarios();
-
-            return funcionario;
+            return GetFuncionarioPorEmpresa(empresaId);
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("GetEmpresa/{id}")]
+        public ActionResult<Empresa> GetEmpresa(int id)
         {
-            return "Teste";
+            return ObterDadosEmpresa(id);
         }
 
         // POST api/values
@@ -41,6 +38,24 @@ namespace MeuPonto.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        //Retorna a lista de funcionarios de determinada empresa
+        public List<Funcionario> GetFuncionarioPorEmpresa(int empresaId)
+        {
+            Funcionario funcionario = new Funcionario();
+            List<Funcionario> funcionarioList = new List<Funcionario>();
+
+            funcionario.ListarFuncionariosPorEmpresa(empresaId, out funcionarioList);
+            return funcionarioList;
+        }
+
+        //Retorna as informações da empresa
+        public Empresa ObterDadosEmpresa(int Id)
+        {
+            Empresa empresa = new Empresa();
+
+            return empresa.DadosEmpresa(Id);
         }
     }
 }

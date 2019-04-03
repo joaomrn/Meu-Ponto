@@ -13,10 +13,9 @@ namespace MeuPonto.Dados
         private static String database = "MeuPonto";
         private static String user = "sa";
         private static String password = "sqladmin";
+
         //Cria String de conexao
-        //private String connectionString = @"Data Source=nome_servidor ou ip_servidor;Initial Catalog=chamado_tecnico;Persist Security Info=True;User ID=sa;Password=abk2000";
         private String connectionString = $"Server={server};Database={database};user={user};password={password};";
-        //private String connectionString = "Server=LAPTOP-PCJEIV97,Authentication=Windows Authentication, Database=MeuPonto";
         private SqlConnection connection;
 
         public DAL()
