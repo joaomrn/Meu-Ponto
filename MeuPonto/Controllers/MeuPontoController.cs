@@ -44,9 +44,10 @@ namespace MeuPonto.Controllers
         }
 
         // PUT api/MeuPonto/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("PutCadastrarPonto/{funcionarioId}")]
+        public bool PutCadastrarPonto(int funcionarioId)
         {
+            return CadastrarPonto(funcionarioId);
         }
 
         // DELETE api/MeuPonto/5
@@ -80,9 +81,18 @@ namespace MeuPonto.Controllers
             Ponto ponto = new Ponto();
             List<Ponto> pontoList;
 
-            ponto.RegistroFuncionario(funcionarioId, out pontoList);
+            ponto.GetRegistroPonto(funcionarioId, out pontoList);
 
             return JsonConvert.SerializeObject(pontoList);
+        }
+
+        public bool CadastrarPonto(int funcionarioId)
+        {
+            Ponto ponto = new Ponto();
+            if (ponto.RegistrarPonto(funcionarioId))
+                return true;
+            else
+                return false;
         }
     }
 }

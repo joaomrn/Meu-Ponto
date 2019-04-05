@@ -43,7 +43,8 @@ namespace MeuPonto.Model
                     funcionario.EmpresaId = Convert.ToInt32(dt.Rows[i]["EmpresaId"].ToString());
                     funcionario.Matricula = dt.Rows[i]["Matricula"].ToString();
                     funcionario.PontoId = Convert.ToInt32(dt.Rows[i]["PontoId"].ToString());
-
+                    
+                    
                     funcionarioList.Add(funcionario);
                 }
             }
