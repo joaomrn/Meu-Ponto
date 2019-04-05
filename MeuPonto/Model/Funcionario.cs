@@ -30,26 +30,23 @@ namespace MeuPonto.Model
             string sql = string.Format("SELECT * FROM FUNCIONARIO WHERE EmpresaId = {0}", empresaId);
 
             DataTable dt = dados.RetDataTable(sql);
-            if (dt != null)
-            {
-                //Verifica se o resultado não é vazio
-                if (dt.Rows.Count > 0)
-                {
-                    //percorre a lista de funcionarios retornados e adiciona na lista
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        funcionario = new Funcionario();
-                        funcionario.Id = Convert.ToInt32(dt.Rows[i]["Id"].ToString());
-                        funcionario.Nome = dt.Rows[i]["Nome"].ToString();
-                        funcionario.EmpresaId = Convert.ToInt32(dt.Rows[i]["EmpresaId"].ToString());
-                        funcionario.Matricula = dt.Rows[i]["Matricula"].ToString();
-                        funcionario.PontoId = Convert.ToInt32(dt.Rows[i]["PontoId"].ToString());
 
-                        funcionarioList.Add(funcionario);
-                    }
+            //Verifica se o resultado não é vazio
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                //percorre a lista de funcionarios retornados e adiciona na lista
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    funcionario = new Funcionario();
+                    funcionario.Id = Convert.ToInt32(dt.Rows[i]["Id"].ToString());
+                    funcionario.Nome = dt.Rows[i]["Nome"].ToString();
+                    funcionario.EmpresaId = Convert.ToInt32(dt.Rows[i]["EmpresaId"].ToString());
+                    funcionario.Matricula = dt.Rows[i]["Matricula"].ToString();
+                    funcionario.PontoId = Convert.ToInt32(dt.Rows[i]["PontoId"].ToString());
+
+                    funcionarioList.Add(funcionario);
                 }
             }
-
             return funcionarioList;
         }
 

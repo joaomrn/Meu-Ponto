@@ -18,7 +18,7 @@ namespace MeuPonto.Model
         public DateTime VoltaAlmoco { get; set; }
         public int FuncionarioId { get; set; }
         public DateTime DiaSemana { get; set; }
-        public string DiaSemanaString { get; set; }
+        public string CaminhoFoto { get; set; }
 
         //Retorna os dados de ponto do funcionario
         public List<Ponto> RegistroFuncionario(int funcionarioId, out List<Ponto> pontoList)
@@ -47,7 +47,7 @@ namespace MeuPonto.Model
                         ponto.IdaAlmoco = Convert.ToDateTime(dt.Rows[i]["IdaAlmoco"].ToString());
                         ponto.VoltaAlmoco = Convert.ToDateTime(dt.Rows[i]["VoltaAlmoco"].ToString());
                         ponto.DiaSemana = Convert.ToDateTime(dt.Rows[i]["DiaSemana"].ToString());
-                        ponto.DiaSemanaString = dt.Rows[i]["DiaSemanaString"].ToString();
+                        ponto.CaminhoFoto = dt.Rows[i]["CaminhoFoto"].ToString();
 
                         //Adiciona o objeto na lista
                         pontoList.Add(ponto);

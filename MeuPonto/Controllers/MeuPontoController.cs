@@ -59,7 +59,7 @@ namespace MeuPonto.Controllers
         public string GetFuncionarioPorEmpresa(int empresaId)
         {
             Funcionario funcionario = new Funcionario();
-            List<Funcionario> funcionarioList = new List<Funcionario>();
+            List<Funcionario> funcionarioList;
 
             funcionario.ListarFuncionariosPorEmpresa(empresaId, out funcionarioList);
 
