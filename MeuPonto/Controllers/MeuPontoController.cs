@@ -17,22 +17,22 @@ namespace MeuPonto.Controllers
         }
         
         // Retorna todos os funcionarios de determinada empresa
-        [HttpGet("GetFuncionario/{empresaId}")]
-        public ActionResult<string> GetFuncionario(int empresaId)
+        [HttpGet("ListaFuncionario/{empresaId}")]
+        public ActionResult<string> ListaFuncionario(int empresaId)
         {
             return GetFuncionarioPorEmpresa(empresaId);
         }
 
         // Retorna os dados da empresa
-        [HttpGet("GetEmpresa/{id}")]
-        public ActionResult<string> GetEmpresa(int id)
+        [HttpGet("DadosEmpresa/{id}")]
+        public ActionResult<string> DadosEmpresa(int id)
         {
             return ObterDadosEmpresa(id);
         }
         
         // Retorna os registros de ponto do funcionario
-        [HttpGet("GetPonto/{funcionarioId}")]
-        public ActionResult<string> GetPonto(int funcionarioId)
+        [HttpGet("ListaRegistroPonto/{funcionarioId}")]
+        public ActionResult<string> ListaRegistroPonto(int funcionarioId)
         {
             return ObterDadosPonto(funcionarioId);
         }
@@ -41,11 +41,12 @@ namespace MeuPonto.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+
         }
 
         // PUT api/MeuPonto/5
-        [HttpPut("PutCadastrarPonto/{funcionarioId}")]
-        public bool PutCadastrarPonto(int funcionarioId)
+        [HttpPut("CadastrarPontoFuncionario/{funcionarioId}")]
+        public bool CadastrarPontoFuncionario(int funcionarioId)
         {
             return CadastrarPonto(funcionarioId);
         }
@@ -86,6 +87,11 @@ namespace MeuPonto.Controllers
             return JsonConvert.SerializeObject(pontoList);
         }
 
+        /// <summary>
+        /// Cadastra no banco o ponto do funcionario
+        /// </summary>
+        /// <param name="funcionarioId">Id do funcionario autenticado</param>
+        /// <returns></returns>
         public bool CadastrarPonto(int funcionarioId)
         {
             Ponto ponto = new Ponto();

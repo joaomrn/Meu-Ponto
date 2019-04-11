@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace MeuPonto.Model
         public string IdaAlmoco { get; set; }
         public string VoltaAlmoco { get; set; }
         public int FuncionarioId { get; set; }
-        public DateTime DiaSemana { get; set; }
+        public string DiaSemana { get; set; }
         public string CaminhoFoto { get; set; }
 
         //Retorna os dados de ponto do funcionario
@@ -26,6 +27,9 @@ namespace MeuPonto.Model
             Ponto ponto = null;
             pontoList = new List<Ponto>();
             DAL dados = new DAL();
+
+            if (!Directory.Exists(@"C:\temp\Fotos"))
+                Directory.CreateDirectory(@"C:\temp\Fotos");
 
             //Monta a string de pesquisa
             string sql = string.Format("SELECT * FROM PONTO WHERE FuncionarioId = {0}", funcionarioId);
@@ -40,14 +44,14 @@ namespace MeuPonto.Model
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         ponto = new Ponto();
-                        //ponto.Id = Convert.ToInt32(dt.Rows[i]["Id"].ToString());
-                        //ponto.FuncionarioId = Convert.ToInt32(dt.Rows[i]["FuncionarioId"].ToString());
-                        //ponto.Entrada = Convert.ToDateTime(dt.Rows[i]["Entrada"].ToString());
-                        //ponto.Saida = Convert.ToDateTime(dt.Rows[i]["Saida"].ToString());
-                        //ponto.IdaAlmoco = Convert.ToDateTime(dt.Rows[i]["IdaAlmoco"].ToString());
-                        //ponto.VoltaAlmoco = Convert.ToDateTime(dt.Rows[i]["VoltaAlmoco"].ToString());
-                        //ponto.DiaSemana = Convert.ToDateTime(dt.Rows[i]["DiaSemana"].ToString());
-                        //ponto.CaminhoFoto = dt.Rows[i]["CaminhoFoto"].ToString();
+                        ponto.Id = Convert.ToInt32(dt.Rows[i]["Id"].ToString());
+                        ponto.FuncionarioId = Convert.ToInt32(dt.Rows[i]["FuncionarioId"].ToString());
+                        ponto.Entrada = dt.Rows[i]["Entrada"].ToString();
+                        ponto.Saida = dt.Rows[i]["Saida"].ToString();
+                        ponto.IdaAlmoco = dt.Rows[i]["IdaAlmoco"].ToString();
+                        ponto.VoltaAlmoco = dt.Rows[i]["VoltaAlmoco"].ToString();
+                        ponto.DiaSemana = dt.Rows[i]["DiaSemana"].ToString();
+                        ponto.CaminhoFoto = dt.Rows[i]["CaminhoFoto"].ToString();
 
                         //Adiciona o objeto na lista
                         pontoList.Add(ponto);
@@ -75,7 +79,7 @@ namespace MeuPonto.Model
             DAL dados = new DAL();
 
             //Monta a string de pesquisa
-            string sql = string.Format("SELECT * FROM PONTO WHERE FuncionarioId = '{0}' AND DiaSemana = '{1}'", funcionarioId, DateTime.Now.ToString("yyyy-MM-dd"));
+            string sql = string.Format("SELECT * FROM PONTO WHERE FuncionarioId = '{0}' AND DiaSemana = '{1}'", funcionarioId, DateTime.Now.ToShortDateString());
 
             DataTable dt = dados.RetDataTable(sql);
 
@@ -103,7 +107,7 @@ namespace MeuPonto.Model
         private string salvarRegistro(Ponto ponto)
         {
             return string.Format("INSERT INTO PONTO VALUES ({0}, '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", ponto.FuncionarioId, ponto.Entrada, 
-                                 ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, DateTime.Now.ToString("yyyy-MM-dd"), ponto.CaminhoFoto);
+                                 ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, DateTime.Now.ToShortDateString(), ponto.CaminhoFoto);
         }
 
         //Montar string de UPDATE
@@ -121,15 +125,6 @@ namespace MeuPonto.Model
             //percorre a lista de funcionarios retornados e adiciona na lista
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                //ponto = new Ponto();
-                //ponto.FuncionarioId = Convert.ToInt32(dt.Rows[i]["FuncionarioId"].ToString());
-                //ponto.Entrada = Convert.ToDateTime(dt.Rows[i]["Entrada"].ToString());
-                //ponto.Saida = Convert.ToDateTime(dt.Rows[i]["Saida"].ToString());
-                //ponto.IdaAlmoco = Convert.ToDateTime(dt.Rows[i]["IdaAlmoco"].ToString());
-                //ponto.VoltaAlmoco = Convert.ToDateTime(dt.Rows[i]["VoltaAlmoco"].ToString());
-                //ponto.DiaSemana = Convert.ToDateTime(dt.Rows[i]["DiaSemana"].ToString());
-                //ponto.CaminhoFoto = dt.Rows[i]["CaminhoFoto"].ToString();
-
                 ponto = new Ponto();
                 ponto.Id = Convert.ToInt32(dt.Rows[i]["Id"].ToString());
                 ponto.FuncionarioId = Convert.ToInt32(dt.Rows[i]["FuncionarioId"].ToString());
@@ -137,7 +132,7 @@ namespace MeuPonto.Model
                 ponto.Saida = dt.Rows[i]["Saida"].ToString();
                 ponto.IdaAlmoco = dt.Rows[i]["IdaAlmoco"].ToString();
                 ponto.VoltaAlmoco = dt.Rows[i]["VoltaAlmoco"].ToString();
-                ponto.DiaSemana = Convert.ToDateTime(dt.Rows[i]["DiaSemana"].ToString());
+                ponto.DiaSemana = dt.Rows[i]["DiaSemana"].ToString();
                 ponto.CaminhoFoto = dt.Rows[i]["CaminhoFoto"].ToString();
             }
         }
@@ -168,6 +163,7 @@ namespace MeuPonto.Model
                 ponto.Saida = DateTime.Now.ToShortTimeString();
                 return;
             }
+
         }
     }
 }
