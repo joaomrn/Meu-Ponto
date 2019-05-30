@@ -19,7 +19,8 @@ namespace MeuPonto.Model
         public string VoltaAlmoco { get; set; }
         public int FuncionarioId { get; set; }
         public string DiaSemana { get; set; }
-        public string CaminhoFoto { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
 
         //Retorna os dados de ponto do funcionario
         public List<Ponto> GetRegistroPonto(int funcionarioId, out List<Ponto> pontoList)
@@ -51,7 +52,8 @@ namespace MeuPonto.Model
                         ponto.IdaAlmoco = dt.Rows[i]["IdaAlmoco"].ToString();
                         ponto.VoltaAlmoco = dt.Rows[i]["VoltaAlmoco"].ToString();
                         ponto.DiaSemana = dt.Rows[i]["DiaSemana"].ToString();
-                        ponto.CaminhoFoto = dt.Rows[i]["CaminhoFoto"].ToString();
+                        ponto.Latitude = dt.Rows[i]["Latitude"].ToString();
+                        ponto.Longitude = dt.Rows[i]["Longitude"].ToString();
 
                         //Adiciona o objeto na lista
                         pontoList.Add(ponto);
@@ -106,16 +108,16 @@ namespace MeuPonto.Model
         //Montar string de INSERT
         private string salvarRegistro(Ponto ponto)
         {
-            return string.Format("INSERT INTO PONTO VALUES ({0}, '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", ponto.FuncionarioId, ponto.Entrada, 
-                                 ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, DateTime.Now.ToShortDateString(), ponto.CaminhoFoto);
+            return string.Format("INSERT INTO PONTO VALUES ({0}, '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')", ponto.FuncionarioId, ponto.Entrada, 
+                                 ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, DateTime.Now.ToShortDateString(), ponto.Latitude, ponto.Longitude);
         }
 
         //Montar string de UPDATE
         private string atualizarRegistro(Ponto ponto)
         {
             return string.Format("UPDATE PONTO SET FuncionarioId = {0}, Entrada = '{1}', IdaAlmoco = '{2}', VoltaAlmoco= '{3}', " +
-                                 "Saida = '{4}', CaminhoFoto = '{5}' WHERE Id = {6}",
-                                 ponto.FuncionarioId, ponto.Entrada, ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, ponto.CaminhoFoto, ponto.Id);
+                                 "Saida = '{4}', WHERE Id = {5}",
+                                 ponto.FuncionarioId, ponto.Entrada, ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, ponto.Id);
         }
 
         //Adiciona no objeto os dados recuperados do banco
@@ -133,7 +135,8 @@ namespace MeuPonto.Model
                 ponto.IdaAlmoco = dt.Rows[i]["IdaAlmoco"].ToString();
                 ponto.VoltaAlmoco = dt.Rows[i]["VoltaAlmoco"].ToString();
                 ponto.DiaSemana = dt.Rows[i]["DiaSemana"].ToString();
-                ponto.CaminhoFoto = dt.Rows[i]["CaminhoFoto"].ToString();
+                ponto.Latitude = dt.Rows[i]["Latitude"].ToString();
+                ponto.Longitude = dt.Rows[i]["Longitude"].ToString();
             }
         }
 

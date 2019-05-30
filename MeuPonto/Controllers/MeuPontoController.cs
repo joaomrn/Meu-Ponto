@@ -38,18 +38,18 @@ namespace MeuPonto.Controllers
         }
 
         // POST api/MeuPonto
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("CadastrarPontoFuncionario/{ponto}")]
+        public bool CadastrarPontoFuncionario(string ponto)
         {
-
+            return CadastrarPonto(ponto);
         }
 
-        // PUT api/MeuPonto/5
-        [HttpPut("CadastrarPontoFuncionario/{funcionarioId}")]
-        public bool CadastrarPontoFuncionario(int funcionarioId)
-        {
-            return CadastrarPonto(funcionarioId);
-        }
+        // POST api/MeuPonto
+        //[HttpGet("CadastrarPontoFuncionario/{latitude}/{longitude}")]
+        //public ActionResult<string> CadastrarPontoFuncionario(double latitude, double longitude)
+        //{
+        //    return CadastrarPonto(latitude, longitude);
+        //}
 
         // DELETE api/MeuPonto/5
         [HttpDelete("{id}")]
@@ -92,13 +92,21 @@ namespace MeuPonto.Controllers
         /// </summary>
         /// <param name="funcionarioId">Id do funcionario autenticado</param>
         /// <returns></returns>
-        public bool CadastrarPonto(int funcionarioId)
+        public bool CadastrarPonto(string ponto1)
         {
-            Ponto ponto = new Ponto();
-            if (ponto.RegistrarPonto(funcionarioId))
+            Ponto ponto = JsonConvert.DeserializeObject<Ponto>(ponto1);
+            ponto.FuncionarioId = 1;
+
+            if (ponto.FuncionarioId != 0)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
+
+           
         }
     }
 }
