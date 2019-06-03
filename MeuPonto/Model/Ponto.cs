@@ -19,11 +19,10 @@ namespace MeuPonto.Model
         public string VoltaAlmoco { get; set; }
         public int FuncionarioId { get; set; }
         public string DiaSemana { get; set; }
-        public string Latitude { get; set; }
-        public string Longitude { get; set; }
+        public Localizacao localizacao { get; set; }
 
         //Retorna os dados de ponto do funcionario
-        public List<Ponto> GetRegistroPonto(int funcionarioId, out List<Ponto> pontoList)
+        public void GetRegistroPonto(int funcionarioId, out List<Ponto> pontoList)
         {
             Ponto ponto = null;
             pontoList = new List<Ponto>();
@@ -52,16 +51,12 @@ namespace MeuPonto.Model
                         ponto.IdaAlmoco = dt.Rows[i]["IdaAlmoco"].ToString();
                         ponto.VoltaAlmoco = dt.Rows[i]["VoltaAlmoco"].ToString();
                         ponto.DiaSemana = dt.Rows[i]["DiaSemana"].ToString();
-                        ponto.Latitude = dt.Rows[i]["Latitude"].ToString();
-                        ponto.Longitude = dt.Rows[i]["Longitude"].ToString();
 
                         //Adiciona o objeto na lista
                         pontoList.Add(ponto);
                     }
                 }
             }
-
-            return pontoList;
         }
 
         /// <summary>
@@ -71,52 +66,51 @@ namespace MeuPonto.Model
         /// <param name="horario">Horario  que o ponto esta sendo registrado</param>
         /// <param name="funcionarioId">Id do funcionario</param>
         /// <returns></returns>
-        public bool RegistrarPonto(int funcionarioId)
+        public bool RegistrarPonto(string latitude, string longitude)
         {
-            //int hora = DateTime.Now.Hour;
-            //string horaFormatada = DateTime.Now.ToString("HH:mm");
-            //string d = DateTime.Now.ToShortTimeString();
-
-            bool sucesso = false;
             DAL dados = new DAL();
 
             //Monta a string de pesquisa
-            string sql = string.Format("SELECT * FROM PONTO WHERE FuncionarioId = '{0}' AND DiaSemana = '{1}'", funcionarioId, DateTime.Now.ToShortDateString());
+            string sql = string.Format("SELECT * FROM PONTO WHERE FuncionarioId = '{0}' AND DiaSemana = '{1}'", 6, DateTime.Now.ToShortDateString());
 
             DataTable dt = dados.RetDataTable(sql);
 
             if (dt != null && dt.Rows.Count > 0)
             {
                 Ponto ponto = new Ponto();
+                localizacao = new Localizacao();
+                localizacao.Latitude = latitude;
+                localizacao.Longitude = longitude;
                 recuperaDados(dt, ref ponto);
                 preencherHorario(ref ponto);
                 dados.ExecutarComandoSql(atualizarRegistro(ponto));
-                sucesso = true;
+                return true;
             }
             else
             {
                 Ponto ponto = new Ponto();
-                ponto.FuncionarioId = funcionarioId;
+                localizacao = new Localizacao();
+                localizacao.Latitude = latitude;
+                localizacao.Longitude = longitude;
+                ponto.FuncionarioId = 6;
                 preencherHorario(ref ponto);
                 dados.ExecutarComandoSql(salvarRegistro(ponto));
-                sucesso = true;
+                return true;
             }
-
-            return sucesso;
         }
 
         //Montar string de INSERT
         private string salvarRegistro(Ponto ponto)
         {
-            return string.Format("INSERT INTO PONTO VALUES ({0}, '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')", ponto.FuncionarioId, ponto.Entrada, 
-                                 ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, DateTime.Now.ToShortDateString(), ponto.Latitude, ponto.Longitude);
+            return string.Format("INSERT INTO PONTO VALUES ({0}, '{1}', '{2}', '{3}', '{4}', '{5}')", ponto.FuncionarioId, ponto.Entrada, 
+                                 ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, DateTime.Now.ToShortDateString());
         }
 
         //Montar string de UPDATE
         private string atualizarRegistro(Ponto ponto)
         {
             return string.Format("UPDATE PONTO SET FuncionarioId = {0}, Entrada = '{1}', IdaAlmoco = '{2}', VoltaAlmoco= '{3}', " +
-                                 "Saida = '{4}', WHERE Id = {5}",
+                                 "Saida = '{4}' WHERE Id = {5}",
                                  ponto.FuncionarioId, ponto.Entrada, ponto.IdaAlmoco, ponto.VoltaAlmoco, ponto.Saida, ponto.Id);
         }
 
@@ -124,7 +118,7 @@ namespace MeuPonto.Model
         private void recuperaDados(DataTable dt, ref Ponto ponto)
         {
 
-            //percorre a lista de funcionarios retornados e adiciona na lista
+            //percorre a lista de ponto retornados e adiciona na lista
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 ponto = new Ponto();
@@ -135,8 +129,6 @@ namespace MeuPonto.Model
                 ponto.IdaAlmoco = dt.Rows[i]["IdaAlmoco"].ToString();
                 ponto.VoltaAlmoco = dt.Rows[i]["VoltaAlmoco"].ToString();
                 ponto.DiaSemana = dt.Rows[i]["DiaSemana"].ToString();
-                ponto.Latitude = dt.Rows[i]["Latitude"].ToString();
-                ponto.Longitude = dt.Rows[i]["Longitude"].ToString();
             }
         }
 
@@ -146,24 +138,28 @@ namespace MeuPonto.Model
             if (string.IsNullOrEmpty(ponto.Entrada))
             {
                 ponto.Entrada = DateTime.Now.ToShortTimeString();
+                localizacao.salvarRegistro("Entrada");
                 return;
             }
 
             if (string.IsNullOrEmpty(ponto.IdaAlmoco))
             {
                 ponto.IdaAlmoco = DateTime.Now.ToShortTimeString();
+                localizacao.salvarRegistro("IdaAlmoco");
                 return;
             }
 
             if (string.IsNullOrEmpty(ponto.VoltaAlmoco))
             {
                 ponto.VoltaAlmoco = DateTime.Now.ToShortTimeString();
+                localizacao.salvarRegistro("VoltaAlmoco");
                 return;
             }
 
             if (string.IsNullOrEmpty(ponto.Saida))
             {
                 ponto.Saida = DateTime.Now.ToShortTimeString();
+                localizacao.salvarRegistro("Saida");
                 return;
             }
 

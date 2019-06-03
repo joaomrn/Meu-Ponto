@@ -16,20 +16,6 @@ namespace MeuPonto.Controllers
             return "API REST Iniciada!";
         }
         
-        // Retorna todos os funcionarios de determinada empresa
-        [HttpGet("ListaFuncionario/{empresaId}")]
-        public ActionResult<string> ListaFuncionario(int empresaId)
-        {
-            return GetFuncionarioPorEmpresa(empresaId);
-        }
-
-        // Retorna os dados da empresa
-        [HttpGet("DadosEmpresa/{id}")]
-        public ActionResult<string> DadosEmpresa(int id)
-        {
-            return ObterDadosEmpresa(id);
-        }
-        
         // Retorna os registros de ponto do funcionario
         [HttpGet("ListaRegistroPonto/{funcionarioId}")]
         public ActionResult<string> ListaRegistroPonto(int funcionarioId)
@@ -37,19 +23,19 @@ namespace MeuPonto.Controllers
             return ObterDadosPonto(funcionarioId);
         }
 
-        // POST api/MeuPonto
-        [HttpPost("CadastrarPontoFuncionario/{ponto}")]
-        public bool CadastrarPontoFuncionario(string ponto)
+        // Retorna os dados da empresa
+        [HttpGet("ListaLocalizacaoPorData/{data}")]
+        public ActionResult<string> ListaLocalizacaoPorData(string data)
         {
-            return CadastrarPonto(ponto);
+            return ObterDadosLocalizacao(data);
         }
 
         // POST api/MeuPonto
-        //[HttpGet("CadastrarPontoFuncionario/{latitude}/{longitude}")]
-        //public ActionResult<string> CadastrarPontoFuncionario(double latitude, double longitude)
-        //{
-        //    return CadastrarPonto(latitude, longitude);
-        //}
+        [HttpGet("CadastrarPontoFuncionario/{latitude}/{longitude}")]
+        public ActionResult<bool> CadastrarPontoFuncionario(string latitude, string longitude)
+        {
+            return CadastrarPonto(latitude, longitude);
+        }
 
         // DELETE api/MeuPonto/5
         [HttpDelete("{id}")]
@@ -87,17 +73,28 @@ namespace MeuPonto.Controllers
             return JsonConvert.SerializeObject(pontoList);
         }
 
+        //Retorna as localizações de acordo com a data
+        public string ObterDadosLocalizacao(string dataRegistroPonto)
+        {
+            string data = dataRegistroPonto.Replace("-", "/");
+            Localizacao localizacao = new Localizacao();
+            List<Localizacao> localizacaoList;
+
+            localizacao.GetRegistroLocalizacao(data, out localizacaoList);
+
+            return JsonConvert.SerializeObject(localizacaoList);
+        }
+
         /// <summary>
         /// Cadastra no banco o ponto do funcionario
         /// </summary>
         /// <param name="funcionarioId">Id do funcionario autenticado</param>
         /// <returns></returns>
-        public bool CadastrarPonto(string ponto1)
+        public bool CadastrarPonto(string latitude, string longitude)
         {
-            Ponto ponto = JsonConvert.DeserializeObject<Ponto>(ponto1);
-            ponto.FuncionarioId = 1;
+            Ponto ponto = new Ponto();
 
-            if (ponto.FuncionarioId != 0)
+            if (ponto.RegistrarPonto(latitude, longitude))
             {
                 return true;
             }
