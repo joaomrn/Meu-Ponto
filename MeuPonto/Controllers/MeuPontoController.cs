@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MeuPonto.Model;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -35,6 +36,20 @@ namespace MeuPonto.Controllers
         public ActionResult<bool> CadastrarPontoFuncionario(string latitude, string longitude)
         {
             return CadastrarPonto(latitude, longitude);
+        }
+
+        // Retorna os registros de ponto do funcionario
+        [HttpGet("ObterRegistroSolicitacao/{funcionarioId}")]
+        public ActionResult<string> ObterRegistroSolicitacao(int funcionarioId)
+        {
+            return ObterSolicitacao(funcionarioId);
+        }
+
+        // POST api/MeuPonto
+        [HttpGet("RegistrarSolicitacaoFuncionario/{data}/{horarioBatida}/{descricao}/{situacao}/{funcionarioId}")]
+        public ActionResult<bool> RegistrarSolicitacaoFuncionario(string data, string horarioBatida, string descricao, string situacao, int funcionarioId)
+        {
+            return RegistrarSolicitacao(data, horarioBatida, descricao, situacao, funcionarioId);
         }
 
         // DELETE api/MeuPonto/5
@@ -102,8 +117,34 @@ namespace MeuPonto.Controllers
             {
                 return false;
             }
+        }
 
-           
+        //Registra no banco a solicitação do cliente
+        public bool RegistrarSolicitacao(string data, string horarioBatida, string descricao, string situacao, int funcionarioId)
+        {
+            DateTime.TryParse(data, out DateTime dateTime);
+
+            data = Convert.ToString(dateTime.ToShortDateString()).ToString();
+
+            Solicitacao solicitacao = new Solicitacao();
+
+            if (solicitacao.RegistrarSolicitacao(data, horarioBatida, descricao, situacao, funcionarioId))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        //Retornar as solicitações do usuario
+        public string ObterSolicitacao(int funcionarioId)
+        {
+            Solicitacao solicitacao = new Solicitacao();
+            List<Solicitacao> solicitacaoList;
+
+            solicitacao.GetSolicitacao(funcionarioId, out solicitacaoList);
+
+            return JsonConvert.SerializeObject(solicitacaoList);
         }
     }
 }
