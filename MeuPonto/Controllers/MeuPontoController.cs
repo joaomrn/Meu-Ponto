@@ -24,11 +24,18 @@ namespace MeuPonto.Controllers
             return ObterDadosPonto(funcionarioId);
         }
 
-        // Retorna os dados da empresa
+        // Retorna os dados da localização pela data
         [HttpGet("ListaLocalizacaoPorData/{data}")]
         public ActionResult<string> ListaLocalizacaoPorData(string data)
         {
-            return ObterDadosLocalizacao(data);
+            return ObterDadosLocalizacaoPorData(data);
+        }
+        
+        // Retorna os dados da localização pela data
+        [HttpGet("ListaLocalizacao/{data}")]
+        public ActionResult<string> ListaLocalizacao()
+        {
+            return ObterDadosLocalizacao();
         }
 
         // POST api/MeuPonto
@@ -50,12 +57,6 @@ namespace MeuPonto.Controllers
         public ActionResult<bool> RegistrarSolicitacaoFuncionario(string data, string horarioBatida, string descricao, string situacao, int funcionarioId)
         {
             return RegistrarSolicitacao(data, horarioBatida, descricao, situacao, funcionarioId);
-        }
-
-        // DELETE api/MeuPonto/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
 
         //Retorna a lista de funcionarios de determinada empresa
@@ -89,13 +90,25 @@ namespace MeuPonto.Controllers
         }
 
         //Retorna as localizações de acordo com a data
-        public string ObterDadosLocalizacao(string dataRegistroPonto)
+        public string ObterDadosLocalizacaoPorData(string dataRegistroPonto)
         {
             string data = dataRegistroPonto.Replace("-", "/");
             Localizacao localizacao = new Localizacao();
             List<Localizacao> localizacaoList;
 
             localizacao.GetRegistroLocalizacao(data, out localizacaoList);
+
+            return JsonConvert.SerializeObject(localizacaoList);
+        }
+        
+        //Retorna as localizações de acordo com a data
+        public string ObterDadosLocalizacao()
+        {
+            //string data = dataRegistroPonto.Replace("-", "/");
+            Localizacao localizacao = new Localizacao();
+            List<Localizacao> localizacaoList;
+
+            localizacao.GetRegistroLocalizacao(string.Empty, out localizacaoList);
 
             return JsonConvert.SerializeObject(localizacaoList);
         }

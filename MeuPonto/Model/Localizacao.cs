@@ -29,11 +29,14 @@ namespace MeuPonto.Model
         public void GetRegistroLocalizacao(string dataRegistroPonto, out List<Localizacao> localizacaoList)
         {
             DAL dados = new DAL();
+            string sql = string.Empty;
             Localizacao localizacao = new Localizacao();
             localizacaoList = new List<Localizacao>();
 
-            //Monta a string de pesquisa
-            string sql = string.Format("SELECT * FROM LOCALIZACAO WHERE DataRegistroPonto = '{0}'", dataRegistroPonto);
+            if(string.IsNullOrEmpty(dataRegistroPonto))
+                sql = string.Format("SELECT * FROM LOCALIZACAO");
+            else
+                sql = string.Format("SELECT * FROM LOCALIZACAO WHERE DataRegistroPonto = '{0}'", dataRegistroPonto);
 
             DataTable dt = dados.RetDataTable(sql);
             if (dt != null)
