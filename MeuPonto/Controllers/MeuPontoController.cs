@@ -10,6 +10,8 @@ namespace MeuPonto.Controllers
     [ApiController]
     public class MeuPontoController : ControllerBase
     {
+        #region metos da API
+    
         // GET api/MeuPonto
         [HttpGet]
         public ActionResult<string> Get()
@@ -52,16 +54,23 @@ namespace MeuPonto.Controllers
             return ObterSolicitacao(funcionarioId);
         }
 
-        // POST api/MeuPonto
+        // Registra no banco as solicitação de correções feitas pelos usuários
         [HttpGet("RegistrarSolicitacaoFuncionario/{data}/{horarioBatida}/{descricao}/{situacao}/{funcionarioId}")]
         public ActionResult<bool> RegistrarSolicitacaoFuncionario(string data, string horarioBatida, string descricao, string situacao, int funcionarioId)
         {
             return RegistrarSolicitacao(data, horarioBatida, descricao, situacao, funcionarioId);
         }
 
+        #endregion
+
+        #region Validação dos ados
+
         //Retorna a lista de funcionarios de determinada empresa
         public string GetFuncionarioPorEmpresa(int empresaId)
         {
+            if (empresaId <= 0)
+                return JsonConvert.SerializeObject("Empresa não localizada!");
+
             Funcionario funcionario = new Funcionario();
             List<Funcionario> funcionarioList;
 
@@ -73,6 +82,9 @@ namespace MeuPonto.Controllers
         //Retorna as informações da empresa
         public string ObterDadosEmpresa(int Id)
         {
+            if (Id <= 0)
+                return JsonConvert.SerializeObject("Empresa não localizada!");
+
             Empresa empresa = new Empresa();
 
             return JsonConvert.SerializeObject(empresa.DadosEmpresa(Id));
@@ -81,6 +93,9 @@ namespace MeuPonto.Controllers
         //Retorna as informações da empresa
         public string ObterDadosPonto(int funcionarioId)
         {
+            if (funcionarioId <= 0)
+                return JsonConvert.SerializeObject("Funcionario(a) não localizado(a)!");
+
             Ponto ponto = new Ponto();
             List<Ponto> pontoList;
 
@@ -92,6 +107,9 @@ namespace MeuPonto.Controllers
         //Retorna as localizações de acordo com a data
         public string ObterDadosLocalizacaoPorData(string dataRegistroPonto)
         {
+            if (string.IsNullOrEmpty(dataRegistroPonto))
+                return JsonConvert.SerializeObject("De ver informado uma data valida para pesquisa!");
+
             string data = dataRegistroPonto.Replace("-", "/");
             Localizacao localizacao = new Localizacao();
             List<Localizacao> localizacaoList;
@@ -104,7 +122,6 @@ namespace MeuPonto.Controllers
         //Retorna as localizações de acordo com a data
         public string ObterDadosLocalizacao()
         {
-            //string data = dataRegistroPonto.Replace("-", "/");
             Localizacao localizacao = new Localizacao();
             List<Localizacao> localizacaoList;
 
@@ -159,5 +176,6 @@ namespace MeuPonto.Controllers
 
             return JsonConvert.SerializeObject(solicitacaoList);
         }
+        #endregion
     }
 }

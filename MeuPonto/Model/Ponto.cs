@@ -145,21 +145,21 @@ namespace MeuPonto.Model
             if (string.IsNullOrEmpty(ponto.IdaAlmoco))
             {
                 ponto.IdaAlmoco = DateTime.Now.ToShortTimeString();
-                localizacao.salvarRegistro("Almoco");
+                localizacao.salvarRegistro("Almoco ");
                 return;
             }
 
             if (string.IsNullOrEmpty(ponto.VoltaAlmoco))
             {
                 ponto.VoltaAlmoco = DateTime.Now.ToShortTimeString();
-                localizacao.salvarRegistro("Volta");
+                localizacao.salvarRegistro("Volta    ");
                 return;
             }
 
             if (string.IsNullOrEmpty(ponto.Saida))
             {
                 ponto.Saida = DateTime.Now.ToShortTimeString();
-                localizacao.salvarRegistro("Saida");
+                localizacao.salvarRegistro("Saida     ");
                 return;
             }
 
